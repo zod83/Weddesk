@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>WedDesk</title>
+<style>
+:root{--tx:#2a1b25;--mu:#7d6672;--ac:#c2386b;--ac2:rgba(194,56,107,.14);--gl:rgba(255,255,255,.55);--gb:rgba(255,255,255,.8);--ok:#168a55;--no:#c0392b;--g1:#ffd6e5;--g2:#e5d4ff;--g3:#ffe9c9;--sh:0 8px 30px rgba(120,40,80,.12);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--tx:#f6e9f0;--mu:#bba5b2;--ac:#f27aa6;--ac2:rgba(242,122,166,.18);--gl:rgba(40,26,36,.55);--gb:rgba(255,255,255,.12);--ok:#5fd199;--no:#ff8a80;--g1:#4a1c37;--g2:#2c1f52;--g3:#4a3320;--sh:0 8px 30px rgba(0,0,0,.4)}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}html,body{margin:0;min-height:100%}
+body{color:var(--tx);font:15px/1.4 system-ui,-apple-system,"Segoe UI",sans-serif;background:var(--g1);background:radial-gradient(circle at 10% 0%,var(--g1),transparent 55%),radial-gradient(circle at 100% 30%,var(--g2),transparent 55%),radial-gradient(circle at 20% 100%,var(--g3),transparent 55%),var(--g1);background-attachment:fixed;padding-bottom:110px}
+header{padding:18px 18px 4px}h1{margin:0;font-size:26px;font-weight:800;letter-spacing:-.5px}h1 em{font-style:normal;color:var(--ac)}header p{margin:2px 0 0;color:var(--mu);font-size:13px}
+main{padding:10px 16px;max-width:560px;margin:auto}
+.card,.sheet{background:var(--gl);backdrop-filter:blur(20px) saturate(160%);-webkit-backdrop-filter:blur(20px) saturate(160%);border:1px solid var(--gb);border-radius:20px;box-shadow:var(--sh)}
+.card{padding:13px;margin-bottom:10px}
+.row{display:flex;align-items:center;gap:10px;justify-content:space-between}.gap{display:flex;gap:10px;align-items:center}
+.mu{color:var(--mu);font-size:13px}b{font-weight:650}
+button{font:inherit;border:0;border-radius:14px;padding:9px 15px;background:var(--ac);color:#fff;cursor:pointer;font-weight:600;transition:transform .1s}button:active{transform:scale(.95)}
+button.ghost{background:var(--ac2);color:var(--ac)}button.ok{background:var(--ok)}button.no{background:var(--no)}button.big{width:100%;padding:14px;font-size:16px;border-radius:16px}button:disabled{opacity:.5}
+input,select{width:100%;font:inherit;padding:12px;border:1px solid var(--gb);border-radius:14px;background:var(--gl);backdrop-filter:blur(10px);color:var(--tx);margin:4px 0 8px;outline:none}input:focus{border-color:var(--ac)}
+.chips{display:flex;gap:8px;overflow-x:auto;padding:2px 0 10px}.chip{white-space:nowrap;background:var(--gl);color:var(--tx);border:1px solid var(--gb);border-radius:20px;padding:7px 14px;backdrop-filter:blur(10px)}.chip.on{background:var(--ac);color:#fff}
+.ic{width:46px;height:46px;border-radius:15px;background:var(--ac2);display:grid;place-items:center;font-size:24px;flex:none}
+.av{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--ac),#9b6bff);color:#fff;display:grid;place-items:center;font-weight:700;flex:none}
+.tag{font-size:11px;padding:3px 9px;border-radius:10px;background:var(--ac2);color:var(--ac);font-weight:600}.tag.ok{color:var(--ok)}.tag.no{color:var(--no)}.tag.vip{background:linear-gradient(135deg,#ffcf5c,#ff9f43);color:#4a2c00}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.kpi{text-align:center;margin:0}.kpi b{display:block;font-size:24px;color:var(--ac)}
+.bar{height:8px;border-radius:6px;background:var(--ac2);overflow:hidden;margin-top:5px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--ac),#9b6bff);border-radius:6px}
+nav{position:fixed;left:14px;right:14px;bottom:calc(12px + env(safe-area-inset-bottom,0px));display:flex;max-width:532px;margin:auto;padding:6px;border-radius:26px;background:var(--gl);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);border:1px solid var(--gb);box-shadow:var(--sh)}
+nav button{flex:1;background:none;color:var(--mu);padding:7px 0;font-size:10.5px;border-radius:20px;font-weight:600}nav button span{display:block;font-size:20px}nav button.on{background:var(--ac2);color:var(--ac)}
+.toast{position:fixed;left:20px;right:20px;bottom:100px;background:var(--gl);backdrop-filter:blur(20px);border:1px solid var(--gb);padding:12px;border-radius:16px;text-align:center;display:none;box-shadow:var(--sh);z-index:30;font-weight:600}
+h3{margin:16px 2px 8px;font-size:17px}
+.bg{position:fixed;inset:0;background:rgba(0,0,0,.35);display:none;z-index:20}.bg.on{display:block}
+.sheet{position:fixed;left:0;right:0;bottom:0;max-width:560px;margin:auto;border-radius:28px 28px 0 0;padding:18px 18px calc(20px + env(safe-area-inset-bottom,0px));z-index:25;transform:translateY(110%);transition:transform .28s;background:var(--gl)}.sheet.on{transform:none}
+.stars button{background:none;padding:2px;font-size:28px;color:#bbb;border-radius:8px}.stars button.f{color:#ffb020}
+.s{color:#ffb020;letter-spacing:1px;font-size:13px}
+</style></head><body>
+<header><h1>Wed<em>Desk</em></h1><p>Wedding planner · vendors · contacts</p></header>
+<main id="app"></main>
+<div class="toast" id="toast"></div>
+<div class="bg" id="bg" onclick="closeS()"></div><div class="sheet" id="sh"></div>
+<nav id="nav"></nav>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const CATS=["All","Decor","Catering","Photo","Music","Makeup"];
+const V=[
+{id:1,n:"Royal Mandap Decor",c:"Decor",p:150000,r:4.8,e:"🌸"},
+{id:2,n:"Shree Caterers",c:"Catering",p:900,r:4.6,e:"🍛",u:"/plate"},
+{id:3,n:"Lens Stories Studio",c:"Photo",p:85000,r:4.9,e:"📸"},
+{id:4,n:"DJ Beatbox",c:"Music",p:40000,r:4.5,e:"🎧"},
+{id:5,n:"Glam by Riya",c:"Makeup",p:25000,r:4.7,e:"💄"},
+{id:6,n:"Floral Dreams",c:"Decor",p:90000,r:4.4,e:"💐"},
+{id:7,n:"Dhol & Baraat Band",c:"Music",p:30000,r:4.3,e:"🥁"}];
+const inr=n=>"₹"+n.toLocaleString("en-IN");
+let S={ow:0,hf:"All",tab:0,cat:"All",cart:[],vv:1,q:"",ed:-1,vip:false,rt:0,
+clients:[
+{n:"Aarav & Meera",ph:"9876543210",vip:1,r:5,st:"Booked"},
+{n:"Rohan & Sneha",ph:"9988776655",vip:0,r:4,st:"Lead"},
+{n:"Karan & Pooja",ph:"9012345678",vip:0,r:0,st:"Lead"},
+{n:"Vikram & Anjali",ph:"9811122334",vip:1,r:5,st:"Lead"},
+{n:"Dev & Isha",ph:"9700011223",vip:0,r:3,st:"Lead"},
+{n:"Nikhil & Tara",ph:"9898912121",vip:0,r:4,st:"Booked"}],
+reqs:[
+{c:"Aarav & Meera",v:1,amt:150000,st:"accepted",today:0},
+{c:"Aarav & Meera",v:3,amt:85000,st:"accepted",today:0},
+{c:"Nikhil & Tara",v:2,amt:450000,st:"accepted",today:0},
+{c:"Nikhil & Tara",v:3,amt:85000,st:"accepted",today:0},
+{c:"Karan & Pooja",v:5,amt:25000,st:"pending",today:1},
+{c:"Karan & Pooja",v:4,amt:40000,st:"pending",today:1}]};
+const $=s=>document.querySelector(s);
+const vn=id=>V.find(v=>v.id==id);
+const dstr=o=>{const d=new Date();d.setDate(d.getDate()-o);return d.toISOString().slice(0,10)};
+S.reqs.forEach((r,i)=>r.d=dstr(r.today?0:[40,40,12,12][i]));
+const oid=i=>"WD-"+(1001+i);
+const stars=r=>"★".repeat(r)+"☆".repeat(5-r);
+function toast(m){const t=$("#toast");t.textContent=m;t.style.display="block";setTimeout(()=>t.style.display="none",2200)}
+function add(id){if(!S.cart.includes(id))S.cart.push(id);toast("Added to your plan");render()}
+function rm(id){S.cart=S.cart.filter(x=>x!=id);render()}
+function enquire(){
+ const n=$("#cn").value.trim(),ph=$("#cp").value.trim();
+ if(!n||ph.length<10){toast("Enter couple name and 10-digit phone");return}
+ S.cart.forEach(id=>S.reqs.push({c:n,v:id,amt:vn(id).p,st:"pending",today:1,d:dstr(0)}));
+ if(!S.clients.find(c=>c.n==n))S.clients.push({n,ph,vip:0,r:0,st:"Lead"});
+ S.cart=[];toast("Enquiry sent. Contact saved.");S.tab=2;S.vv=S.reqs[S.reqs.length-1].v;render()}
+function setReq(i,st){S.reqs[i].st=st;
+ if(st=="accepted"){const c=S.clients.find(x=>x.n==S.reqs[i].c);if(c)c.st="Booked"}render()}
+function openS(i){S.ed=i;const c=i>=0?S.clients[i]:{n:"",ph:"",vip:0,r:0};S.vip=!!c.vip;S.rt=c.r;
+ $("#sh").innerHTML=`<div class="row"><h3 style="margin:0">${i>=0?"Edit contact":"New contact"}</h3><button class="ghost" onclick="closeS()">Close</button></div>
+ <input id="en" placeholder="Couple name" value="${c.n}"><input id="ep" type="tel" placeholder="Phone" maxlength="10" value="${c.ph}">
+ <div class="row"><b>⭐ VIP client</b><button id="vb" class="ghost" onclick="S.vip=!S.vip;tv()"></button></div>
+ <div class="row" style="margin:8px 0"><b>Rating</b><div class="stars" id="st"></div></div>
+ <button class="big" onclick="saveC()">Save</button>
+ ${i>=0?`<div class="gap" style="margin-top:10px"><a href="https://wa.me/91${c.ph}" style="flex:1;text-decoration:none"><button class="ok big" style="padding:11px">WhatsApp</button></a><button class="no" style="flex:1;padding:12px" onclick="delC()">Delete</button></div>`:""}`;
+ tv();$("#bg").classList.add("on");$("#sh").classList.add("on")}
+function tv(){$("#vb").textContent=S.vip?"VIP ✓":"Mark VIP";$("#vb").className=S.vip?"":"ghost";
+ $("#st").innerHTML=[1,2,3,4,5].map(i=>`<button class="${i<=S.rt?"f":""}" onclick="S.rt=S.rt==${i}?0:${i};tv()">★</button>`).join("")}
+function closeS(){$("#bg").classList.remove("on");$("#sh").classList.remove("on")}
+function saveC(){const n=$("#en").value.trim(),ph=$("#ep").value.trim();
+ if(!n||ph.length<10){toast("Enter name and 10-digit phone");return}
+ const o={n,ph,vip:S.vip?1:0,r:S.rt,st:S.ed>=0?S.clients[S.ed].st:"Lead"};
+ if(S.ed>=0)S.clients[S.ed]=o;else S.clients.push(o);
+ closeS();toast("Contact saved");render()}
+function delC(){S.clients.splice(S.ed,1);closeS();toast("Contact deleted");render()}
+function nav(){const T=[["🛍️","Vendors"],["📝","Plan"],["🧑‍💼","Vendor"],["👥","Contacts"],["📊","Owner"]];
+ $("#nav").innerHTML=T.map((t,i)=>`<button class="${S.tab==i?"on":""}" onclick="S.tab=${i};render()"><span>${t[0]}</span>${t[1]}</button>`).join("")}
+function tabVendors(){
+ const l=V.filter(v=>S.cat=="All"||v.c==S.cat);
+ return `<div class="chips">${CATS.map(c=>`<button class="chip ${S.cat==c?"on":""}" onclick="S.cat='${c}';render()">${c}</button>`).join("")}</div>`+
+ l.map(v=>`<div class="card row"><div class="gap"><div class="ic">${v.e}</div><div><b>${v.n}</b><div class="mu">${v.c} · ⭐ ${v.r}</div><div>${inr(v.p)}${v.u||""}</div></div></div>
+ <button class="${S.cart.includes(v.id)?"ghost":""}" onclick="add(${v.id})" ${S.cart.includes(v.id)?"disabled":""}>${S.cart.includes(v.id)?"Added":"Add"}</button></div>`).join("")}
+function tabPlan(){
+ const tot=S.cart.reduce((a,id)=>a+vn(id).p,0);
+ return `<h3>Your wedding plan</h3>`+(S.cart.length?S.cart.map(id=>`<div class="card row"><span>${vn(id).e} ${vn(id).n}</span><span>${inr(vn(id).p)} <button class="ghost" onclick="rm(${id})">✕</button></span></div>`).join("")+
+ `<div class="row" style="padding:0 4px"><b>Estimated total</b><b>${inr(tot)}</b></div><p class="mu">Caterer price is per plate.</p>
+ <input id="cn" placeholder="Couple name (e.g. Aman &amp; Riya)"><input id="cp" type="tel" placeholder="Phone number" maxlength="10">
+ <input type="date" aria-label="Wedding date"><button class="big" onclick="enquire()">Send enquiry to vendors</button>`
+ :`<div class="card mu">No vendors added yet. Open the Vendors tab and tap Add.</div>`)}
+function tabVendor(){
+ const mine=S.reqs.map((r,i)=>({...r,i})).filter(r=>r.v==S.vv);
+ const earn=mine.filter(r=>r.st=="accepted").reduce((a,r)=>a+r.amt,0);
+ return `<h3>Vendor panel</h3><select onchange="S.vv=this.value;render()">${V.map(v=>`<option value="${v.id}" ${v.id==S.vv?"selected":""}>${v.n}</option>`).join("")}</select>
+ <div class="card kpi"><span class="mu">Confirmed bookings value</span><b>${inr(earn)}</b></div>
+ <h3>Booking requests</h3>`+(mine.length?mine.map(r=>`<div class="card"><div class="row"><b>${r.c}</b><span class="tag ${r.st=="accepted"?"ok":r.st=="declined"?"no":""}">${r.st}</span></div><div class="mu">Quote ${inr(r.amt)}</div>
+ ${r.st=="pending"?`<div class="gap" style="margin-top:8px"><button class="ok" style="flex:1" onclick="setReq(${r.i},'accepted')">Accept</button><button class="no" style="flex:1" onclick="setReq(${r.i},'declined')">Decline</button></div>`:""}</div>`).join(""):`<div class="card mu">No requests yet.</div>`)}
+function tabContacts(){
+ const q=S.q.toLowerCase(),l=S.clients.map((c,i)=>({...c,i})).filter(c=>c.n.toLowerCase().includes(q)||c.ph.includes(q)).sort((a,b)=>b.vip-a.vip);
+ return `<div class="row"><h3>Contacts (${S.clients.length})</h3><button onclick="openS(-1)">+ Add</button></div>
+ <input placeholder="Search name or phone" value="${S.q}" oninput="S.q=this.value;render();const e=$('input');e.focus();e.setSelectionRange(99,99)">`+
+ (l.length?l.map(c=>`<div class="card row" onclick="openS(${c.i})" style="cursor:pointer"><div class="gap"><div class="av">${c.n[0]}</div><div><b>${c.n}</b> ${c.vip?'<span class="tag vip">VIP</span>':""}<div class="mu">+91 ${c.ph}</div><div class="s">${c.r?stars(c.r):'<span class="mu">Not rated</span>'}</div></div></div><span class="tag ${c.st=="Booked"?"ok":""}">${c.st}</span></div>`).join(""):`<div class="card mu">No contacts found.</div>`)}
+function tabOwner(){
+ return `<div class="chips"><button class="chip ${S.ow==0?"on":""}" onclick="S.ow=0;render()">Dashboard</button><button class="chip ${S.ow==1?"on":""}" onclick="S.ow=1;render()">History</button></div>`+(S.ow?tabHist():tabDash())}
+function tabDash(){
+ const n=S.clients.length||1,bk=S.clients.filter(c=>c.st=="Booked").length,conv=Math.round(bk/n*100);
+ const acc=S.reqs.filter(r=>r.st=="accepted"),rev=acc.reduce((a,r)=>a+r.amt,0);
+ const td=S.reqs.filter(r=>r.today).length,vips=S.clients.filter(c=>c.vip).length;
+ const rt=S.clients.filter(c=>c.r),avg=rt.length?(rt.reduce((a,c)=>a+c.r,0)/rt.length).toFixed(1):"–";
+ const by={};acc.forEach(r=>by[r.v]=(by[r.v]||0)+r.amt);
+ const top=Object.entries(by).sort((a,b)=>b[1]-a[1]).slice(0,3),mx=top[0]?top[0][1]:1;
+ return `<h3>Owner dashboard</h3><div class="grid">
+ <div class="card kpi"><b>${conv}%</b><span class="mu">Lead to booking</span></div>
+ <div class="card kpi"><b>${td}</b><span class="mu">Today's requests</span></div>
+ <div class="card kpi"><b>${inr(rev)}</b><span class="mu">Booked value</span></div>
+ <div class="card kpi"><b>${inr(Math.round(rev*0.1))}</b><span class="mu">Commission (10%)</span></div>
+ <div class="card kpi"><b>${vips}</b><span class="mu">VIP clients</span></div>
+ <div class="card kpi"><b>${avg} ★</b><span class="mu">Avg client rating</span></div></div>
+ <div class="card"><b>Top vendors</b>${top.length?top.map(t=>`<div style="margin-top:10px"><div class="row"><span>${vn(t[0]).e} ${vn(t[0]).n}</span><span>${inr(t[1])}</span></div><div class="bar"><i style="width:${t[1]/mx*100}%"></i></div></div>`).join(""):'<p class="mu">No bookings yet.</p>'}</div>
+ <div class="card row"><span>Pending vendor requests</span><b>${S.reqs.filter(r=>r.st=="pending").length}</b></div>`}
+function tabHist(){
+ const l=S.reqs.map((r,i)=>({...r,i})).filter(r=>S.hf=="All"||r.st==S.hf.toLowerCase()).reverse();
+ const tot=l.filter(r=>r.st=="accepted").reduce((a,r)=>a+r.amt,0);
+ return `<div class="chips">${["All","Accepted","Pending","Declined"].map(f=>`<button class="chip ${S.hf==f?"on":""}" onclick="S.hf='${f}';render()">${f}</button>`).join("")}</div>
+ <div class="card row"><div><b>${l.length} orders</b><div class="mu">Confirmed value ${inr(tot)}</div></div><button onclick="pdf([${l.map(r=>r.i)}],'Orders report')">📄 Download PDF</button></div>`+
+ (l.length?l.map(r=>`<div class="card"><div class="row"><b>${oid(r.i)} · ${r.c}</b><span class="tag ${r.st=="accepted"?"ok":r.st=="declined"?"no":""}">${r.st}</span></div><div class="row" style="margin-top:4px"><span class="mu">${vn(r.v).e} ${vn(r.v).n} · ${r.d}</span><b>${inr(r.amt)}</b></div><button class="ghost" style="margin-top:8px" onclick="pdf([${r.i}],'Order ${oid(r.i)}')">📄 Order PDF</button></div>`).join(""):`<div class="card mu">No orders found.</div>`)}
+async function pdf(ids,title){
+ if(!window.jspdf){toast("PDF library not loaded");return}
+ const dl=window.claude?await claude.use("downloads"):null;
+ if(!dl){toast("PDF download is not available here");return}
+ const d=new window.jspdf.jsPDF();let y=20,tot=0;
+ d.setFontSize(18);d.text("WedDesk - "+title,14,y);y+=8;
+ d.setFontSize(10);d.text("Generated on "+dstr(0),14,y);y+=10;
+ ids.forEach(i=>{const r=S.reqs[i];if(y>270){d.addPage();y=20}
+  d.setFontSize(11);d.text(oid(i)+"   "+r.c,14,y);d.text(r.st.toUpperCase(),196,y,{align:"right"});y+=6;
+  d.setFontSize(10);d.text(vn(r.v).n+" ("+vn(r.v).c+")   |   "+r.d,14,y);d.text("Rs. "+r.amt.toLocaleString("en-IN"),196,y,{align:"right"});y+=4;
+  d.line(14,y,196,y);y+=7;if(r.st=="accepted")tot+=r.amt});
+ d.setFontSize(12);d.text("Confirmed total: Rs. "+tot.toLocaleString("en-IN"),14,y+4);
+ try{await dl.save({filename:"weddesk-"+title.toLowerCase().replace(/\W+/g,"-")+".pdf",data:d.output("arraybuffer")});toast("PDF saved")}catch(e){if(e.code!="declined")toast("Could not save PDF")}}
+function render(){nav();$("#app").innerHTML=[tabVendors,tabPlan,tabVendor,tabContacts,tabOwner][S.tab]()}
+render();
+</script></body></html>
